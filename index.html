@@ -3,99 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasta ve Havai Fişek</title>
+    <title>Çınar'ın Doğum Günü - Düzeltilmiş Layout</title>
     <style>
         /* --- GENEL AYARLAR --- */
         body {
-            background: #000; /* Havai fişekler için siyah arka plan */
+            background: #000; /* Gece gökyüzü için siyah arka plan */
             margin: 0;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
+            overflow: hidden; /* Kaydırma çubuklarını gizle */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #fff;
         }
 
-        /* --- ARKA PLAN (HAVAİ FİŞEK) --- */
+        /* --- ARKA PLAN (HAVAİ FİŞEK CANVA'SI) --- */
         canvas {
             display: block;
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 0; /* En arkada durması için */
+            z-index: 0; /* En arkada */
         }
 
-        /* --- ÖN PLAN (PASTA VE YAZI) --- */
-        
-        /* Yazı Stili */
+        /* --- ÖN PLAN KAPSAYICI (TÜM İÇERİK) --- */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10; /* Havai fişeklerin önünde */
+            position: relative;
+            pointer-events: none; /* Tıklamaları arkadaki canvasa geçirir */
+        }
+
+        /* --- YAZI STİLLERİ --- */
         .message-container {
-            position: absolute;
-            top: 8%; /* Yazıları daha üste taşıdık */
-            width: 100%;
             text-align: center;
-            z-index: 5; /* Mumların arkasında kalması için z-index düşürüldü */
-            pointer-events: none; /* Tıklamaları engellemesin */
+            /* PASTA İLE YAZI ARASINDAKİ AYRIMI GARANTİ ETMEK İÇIN MARJ ARTIRILDI */
+            margin-bottom: 120px; 
+            z-index: 15; /* Pastanın ve mumların önünde durması için yükseltildi */
+        }
+
+        .text-glow {
+            opacity: 0; /* Başlangıçta gizli */
+            transform: translateY(20px);
+            animation: fadeInUp 1s ease-out forwards;
         }
 
         .message-title {
-            font-size: 45px;
-            color: #fff; /* Siyah zemin üzerine beyaz yazı */
+            font-size: 36px;
             font-weight: bold;
-            text-shadow: 0 0 10px #00a8ff, 0 0 20px #00a8ff; /* Mavi neon parlama efekti */
-            opacity: 0;
-            animation: textFadeIn 1s 1s ease-out forwards;
+            color: #fff;
+            text-shadow: 0 0 10px #00a8ff, 0 0 20px #00a8ff, 0 0 30px #00a8ff; /* Mavi neon */
+            animation-delay: 0.5s;
         }
 
         .message-name {
-            font-size: 65px;
-            color: #fbc531; /* Altın sarısı renk */
-            font-weight: bold;
+            font-size: 54px;
+            font-weight: 900;
+            color: #fbc531; /* Altın sarısı */
             margin-top: 10px;
-            text-shadow: 0 0 10px #e1b12c, 0 0 20px #e1b12c;
-            opacity: 0;
-            animation: textFadeIn 1s 2s ease-out forwards;
+            text-shadow: 0 0 15px #e1b12c, 0 0 25px #e1b12c;
+            animation-delay: 1.5s;
         }
 
+        .message-seviyorum {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fbc531;
+            margin-top: 15px;
+            text-shadow: 0 0 10px #e1b12c;
+            animation-delay: 2.5s;
+        }
+
+        /* Azra Ablan kısmı - İstediğin gibi en altta ve gri tonda */
         .message-note {
-            font-size: 24px;
-            color: #ccc;
-            margin-top: 25px;
+            font-size: 18px;
+            color: #aaaaaa; /* Hafif gri */
+            margin-top: 10px;
             letter-spacing: 2px;
-            opacity: 0;
-            animation: textFadeIn 1s 3s ease-out forwards;
+            text-shadow: 0 0 5px rgba(255,255,255,0.3);
+            animation-delay: 3.5s;
         }
 
-        /* Pasta Kapsayıcı */
+        /* --- PASTA VE MUM STİLLERİ (ORİJİNAL RENKLER KORUNDU) --- */
         .cake-wrapper {
             position: relative;
-            z-index: 10; /* Yazıların (özellikle alttaki notun) önünde durması için */
-            margin-top: 280px; /* Pastayı yazılara göre aşağı hizaladık */
+            /* Pastayı ve mumları barındıran wrapper'a sabit yükseklik ve alan */
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         /* Tabak */
         .plate {
-            width: 350px;
-            height: 15px;
-            background: #dfe6e9;
+            width: 250px;
+            height: 10px;
+            background: #dfe6e9; /* Orijinal renk */
             border-radius: 10px;
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 5px 15px rgba(255,255,255,0.2); /* Siyah zeminde parlak gölge */
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
         }
 
         /* Pastanın Keki */
         .cake {
-            width: 300px;
-            height: 120px;
-            background: #2f3640; /* Koyu lacivert/gri tonlarında şık bir pasta */
-            position: relative;
+            width: 220px;
+            height: 90px;
+            background: #2f3640; /* Koyu orijinal renk */
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
             border-radius: 10px 10px 5px 5px;
-            display: flex;
-            justify-content: center;
-            box-shadow: inset -10px 0 rgba(0,0,0,0.5);
+            box-shadow: inset -10px 0 0 rgba(0,0,0,0.2);
         }
 
         /* Krema */
@@ -104,103 +125,136 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 40px;
-            background: #dcdde1; /* Beyaz-gri krema */
-            border-radius: 10px 10px 30px 30px;
+            height: 30px;
+            background: #dcdde1; /* Beyaz-gri orijinal krema */
+            border-radius: 10px 10px 20px 20px;
             z-index: 1;
         }
 
-        /* Mum Konteynır */
+        /* Mum Konteynırı */
         .candle-container {
             display: flex;
             justify-content: center;
-            align-items: flex-end;
-            gap: 8px;
+            gap: 6px;
             position: absolute;
-            top: -50px;
-            z-index: 2;
+            top: -40px;
             width: 100%;
+            z-index: 2; /* Mumlar pastanın önünde */
         }
 
         /* Mumlar */
         .candle {
-            background: repeating-linear-gradient(45deg, #00a8ff, #00a8ff 5px, #0097e6 5px, #0097e6 10px); /* Mavi çizgili mumlar */
+            background: repeating-linear-gradient(45deg, #00a8ff, #00a8ff 4px, #fff 4px, #fff 8px); /* Mavi-beyaz çizgili */
             border-radius: 3px;
-            width: 12px;
-            height: 60px;
+            width: 8px;
+            height: 50px;
             position: relative;
-            transform: translateY(-600px);
-            animation: dropIn 1s ease-out forwards;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 5px rgba(0,168,255,0.5);
+            
+            /* Düşme animasyonu */
+            transform: translateY(-300px);
+            animation: candleDrop 1s ease-out forwards;
         }
 
         /* Alev */
         .fire {
             position: absolute;
-            top: -18px;
+            top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            width: 10px;
-            height: 16px;
-            background: #ff7675;
+            width: 8px;
+            height: 14px;
+            background: #ff7675; /* Ateş rengi */
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            animation: flicker 0.2s infinite alternate;
-            box-shadow: 0 0 10px #ff7675; /* Alev parlaması */
+            background: radial-gradient(#ffead7, #ff7675);
+            animation: flicker 0.2s infinite alternate, flameGlow 1s infinite alternate;
+            box-shadow: 0 0 10px #ff7675, 0 0 20px #ff7675;
+            opacity: 0; /* Başlangıçta sönük */
+            animation-delay: 1.5s; /* Mumlar düştükten sonra yanacak */
         }
         
-        .fire::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 8px;
-            background: #ffeaa7;
-            border-radius: 50%;
+        /* Mum yandıktan sonra opacity'i açmak için sınıf */
+        .candle-lit .fire {
+            opacity: 1;
+            transition: opacity 0.5s;
         }
 
-        /* Animasyonlar */
-        @keyframes dropIn { to { transform: translateY(0); } }
-        @keyframes textFadeIn { to { opacity: 1; transform: scale(1.1); } }
+        /* --- ANİMASYON TANIMLARI --- */
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes candleDrop {
+            to { transform: translateY(0); }
+        }
+
         @keyframes flicker {
-            from { transform: translateX(-50%) scale(1); opacity: 0.9; }
-            to { transform: translateX(-50%) scale(1.1); opacity: 1; }
+            from { transform: translateX(-50%) scale(1) rotate(-1deg); }
+            to { transform: translateX(-50%) scale(1.05) rotate(1deg); }
+        }
+
+        @keyframes flameGlow {
+            from { box-shadow: 0 0 10px #ff7675; }
+            to { box-shadow: 0 0 15px #ff7675, 0 0 5px #e1b12c; }
         }
 
     </style>
 </head>
 <body>
 
+    <!-- Havai Fişek Arka Planı -->
     <canvas id="canvas"></canvas>
 
-    <div class="message-container">
-        <div class="message-title">Doğum Günün Kutlu Olsun</div>
-        <div class="message-name">Çınarcığım</div>
-        <div class="message-name">Seni Çooook Seviyorum</div>
-        <div class="message-note">Azra Ablan</div> 
-    </div>
-
-    <div class="cake-wrapper">
-        <div class="cake">
-            <div class="icing"></div>
-            <div class="candle-container">
-                <div class="candle" style="animation-delay: 0.5s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 0.6s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 0.7s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 0.8s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 0.9s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 1.0s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 1.1s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 1.2s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 1.3s;"><div class="fire"></div></div>
-                <div class="candle" style="animation-delay: 1.4s;"><div class="fire"></div></div>
-            </div>
+    <!-- Ana İçerik -->
+    <div class="main-container">
+        <!-- Yazılar -->
+        <div class="message-container">
+            <div class="message-title text-glow">Doğum Günün Kutlu Olsun</div>
+            <div class="message-name text-glow">Çınarcığım</div>
+            <div class="message-seviyorum text-glow">Seni Çooook Seviyorum</div>
+            <div class="message-note text-glow">Azra Ablan</div> 
         </div>
-        <div class="plate"></div>
+
+        <!-- Pasta -->
+        <div class="cake-wrapper">
+            <div class="cake">
+                <div class="icing"></div>
+                <!-- Mum Konteynırı - JS ile 9 mum eklenecek -->
+                <div class="candle-container">
+                </div>
+            </div>
+            <div class="plate"></div>
+        </div>
     </div>
 
     <script>
+        // --- MUM OLUSTURMA VE YAKMA ---
+        const candleContainer = document.querySelector('.candle-container');
+        // Orijinal görseldeki gibi tam 9 mum
+        const numCandles = 9; 
+
+        for (let i = 0; i < numCandles; i++) {
+            const candle = document.createElement('div');
+            candle.classList.add('candle');
+            
+            // Rastgele düşme gecikmesi
+            const dropDelay = i * 0.1;
+            candle.style.animationDelay = `${dropDelay}s`;
+            
+            const fire = document.createElement('div');
+            fire.classList.add('fire');
+            
+            candle.appendChild(fire);
+            candleContainer.appendChild(candle);
+
+            // Mum düştükten sonra alevi yak
+            setTimeout(() => {
+                candle.classList.add('candle-lit');
+            }, (dropDelay + 1) * 1000); // Düşme süresi (1s) + gecikme
+        }
+
+        // --- HAVAİ FİŞEK EFEKTİ (Canvas JS) ---
+        // Basitleştirilmiş ve optimize edilmiş havai fişek kodu
         window.requestAnimFrame = (function(){
           return  window.requestAnimationFrame       || 
                   window.webkitRequestAnimationFrame || 
@@ -214,23 +268,21 @@
             ch = window.innerHeight,
             fireworks = [],
             particles = [],
-            hue = 120,
-            limiterTotal = 5,
-            limiterTick = 0,
-            timerTotal = 20, 
-            timerTick = 0,
-            mousedown = false,
-            mx, my;
+            hue = 120, // Başlangıç rengi
+            timerTotal = 50, // Havai fişek sıklığı (düşük sayı = daha sık)
+            timerTick = 0;
             
         canvas.width = cw;
         canvas.height = ch;
 
         function random( min, max ) { return Math.random() * ( max - min ) + min; }
+
         function calculateDistance( p1x, p1y, p2x, p2y ) {
             var xDistance = p1x - p2x, yDistance = p1y - p2y;
             return Math.sqrt( Math.pow( xDistance, 2 ) + Math.pow( yDistance, 2 ) );
         }
 
+        // Havai Fişek Roketi
         function Firework( sx, sy, tx, ty ) {
             this.x = sx; this.y = sy; this.sx = sx; this.sy = sy;
             this.tx = tx; this.ty = ty;
@@ -243,18 +295,17 @@
             this.speed = 2;
             this.acceleration = 1.05;
             this.brightness = random( 50, 70 );
-            this.targetRadius = 1;
         }
 
         Firework.prototype.update = function( index ) {
             this.coordinates.pop();
             this.coordinates.unshift( [ this.x, this.y ] );
-            if( this.targetRadius < 8 ) { this.targetRadius += 0.3; } else { this.targetRadius = 1; }
             this.speed *= this.acceleration;
             var vx = Math.cos( this.angle ) * this.speed, vy = Math.sin( this.angle ) * this.speed;
             this.distanceTraveled = calculateDistance( this.sx, this.sy, this.x + vx, this.y + vy );
+            
             if( this.distanceTraveled >= this.distanceToTarget ) {
-                createParticles( this.tx, this.ty );
+                createParticles( this.tx, this.ty, this.brightness );
                 fireworks.splice( index, 1 );
             } else { this.x += vx; this.y += vy; }
         }
@@ -267,7 +318,8 @@
             ctx.stroke();
         }
 
-        function Particle( x, y ) {
+        // Patlama Parçacıkları
+        function Particle( x, y, fireworkBrightness ) {
             this.x = x; this.y = y;
             this.coordinates = [];
             this.coordinateCount = 5;
@@ -276,10 +328,15 @@
             this.speed = random( 1, 10 );
             this.friction = 0.95;
             this.gravity = 1;
-            this.hue = random( hue - 50, hue + 50 );
-            this.brightness = random( 50, 80 );
+            // Renk paleti: Altın (#fbc531) ve Mavi (#00a8ff) ağırlıklı
+            if(Math.random() > 0.5) {
+                this.hue = random(35, 50); // Altın/Sarı tonları
+            } else {
+                this.hue = random(190, 210); // Mavi tonları
+            }
+            this.brightness = random( fireworkBrightness - 10, fireworkBrightness + 20 );
             this.alpha = 1;
-            this.decay = random( 0.015, 0.03 );
+            this.decay = random( 0.015, 0.03 ); // Kaybolma hızı
         }
 
         Particle.prototype.update = function( index ) {
@@ -296,47 +353,55 @@
             ctx.beginPath();
             ctx.moveTo( this.coordinates[ this.coordinates.length - 1 ][ 0 ], this.coordinates[ this.coordinates.length - 1 ][ 1 ] );
             ctx.lineTo( this.x, this.y );
+            // Parlaklık efekti için alpha kullanımı
             ctx.strokeStyle = 'hsla(' + this.hue + ', 100%, ' + this.brightness + '%, ' + this.alpha + ')';
+            ctx.lineWidth = 2;
             ctx.stroke();
         }
 
-        function createParticles( x, y ) {
-            var particleCount = 50; 
-            while( particleCount-- ) { particles.push( new Particle( x, y ) ); }
+        function createParticles( x, y, brightness ) {
+            var particleCount = 40; 
+            while( particleCount-- ) { particles.push( new Particle( x, y, brightness ) ); }
         }
 
+        // Ana Döngü
         function loop() {
             requestAnimFrame( loop );
-            hue += 0.5;
+            
+            // Arka planı hafifçe temizle (iz bırakma efekti için)
             ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; 
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; 
             ctx.fillRect( 0, 0, cw, ch );
+            // Parçacıkları "lighter" moduyla çiz (parlama efekti)
             ctx.globalCompositeOperation = 'lighter';
             
+            // Roketleri güncelle ve çiz
             var i = fireworks.length;
             while( i-- ) { fireworks[ i ].draw(); fireworks[ i ].update( i ); }
             
+            // Parçacıkları güncelle ve çiz
             var i = particles.length;
             while( i-- ) { particles[ i ].draw(); particles[ i ].update( i ); }
 
+            // Otomatik havai fişek fırlat
             if( timerTick >= timerTotal ) {
-                if( !mousedown ) {
-                    fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
-                    timerTick = 0;
-                }
+                // Rastgele bir hedef noktası seç (ekranın üst yarısı)
+                var targetX = random(cw * 0.1, cw * 0.9);
+                var targetY = random(ch * 0.1, ch * 0.5);
+                fireworks.push( new Firework( cw / 2, ch, targetX, targetY ) );
+                timerTick = 0;
             } else { timerTick++; }
-            
-            if( limiterTick >= limiterTotal ) {
-                if( mousedown ) {
-                    fireworks.push( new Firework( cw / 2, ch, mx, my ) );
-                    limiterTick = 0;
-                }
-            } else { limiterTick++; }
         }
 
-        canvas.addEventListener( 'mousemove', function( e ) { mx = e.pageX - canvas.offsetLeft; my = e.pageY - canvas.offsetTop; });
-        canvas.addEventListener( 'mousedown', function( e ) { e.preventDefault(); mousedown = true; });
-        canvas.addEventListener( 'mouseup', function( e ) { e.preventDefault(); mousedown = false; });
+        // Pencere boyutu değiştiğinde canvas'ı güncelle
+        window.addEventListener('resize', function() {
+            cw = window.innerWidth;
+            ch = window.innerHeight;
+            canvas.width = cw;
+            canvas.height = ch;
+        });
+
+        // Başlat
         window.onload = loop;
     </script>
 </body>
