@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Çınar'ın Doğum Günü - Düzeltilmiş Layout</title>
+    <title>Muratın Doğum Günü - Düzeltilmiş Layout</title>
     <style>
         /* --- GENEL AYARLAR --- */
         body {
@@ -210,16 +210,16 @@
         <!-- Yazılar -->
         <div class="message-container">
             <div class="message-title text-glow">Doğum Günün Kutlu Olsun</div>
-            <div class="message-name text-glow">Kürşat Abiciğim</div>
+            <div class="message-name text-glow">Murat</div>
             <div class="message-seviyorum text-glow">Seni Çok Seviyorum</div>
-            <div class="message-note text-glow">Sevgilerle Azra</div> 
+            <div class="message-note text-glow">Sevgilerle Azra Ablan</div> 
         </div>
 
         <!-- Pasta -->
         <div class="cake-wrapper">
             <div class="cake">
                 <div class="icing"></div>
-                <!-- Mum Konteynırı - JS ile 9 mum eklenecek -->
+                <!-- Mum Konteynırı - JS ile 8 mum eklenecek -->
                 <div class="candle-container">
                 </div>
             </div>
@@ -230,8 +230,8 @@
     <script>
         // --- MUM OLUSTURMA VE YAKMA ---
         const candleContainer = document.querySelector('.candle-container');
-        // Orijinal görseldeki gibi tam 9 mum
-        const numCandles = 9; 
+        // Tam 8 mum
+        const numCandles = 8; 
 
         for (let i = 0; i < numCandles; i++) {
             const candle = document.createElement('div');
@@ -254,9 +254,8 @@
         }
 
         // --- HAVAİ FİŞEK EFEKTİ (Canvas JS) ---
-        // Basitleştirilmiş ve optimize edilmiş havai fişek kodu
         window.requestAnimFrame = (function(){
-          return  window.requestAnimationFrame       || 
+          return  window.requestAnimationFrame         || 
                   window.webkitRequestAnimationFrame || 
                   window.mozRequestAnimationFrame    || 
                   function( callback ){ window.setTimeout(callback, 1000 / 60); };
